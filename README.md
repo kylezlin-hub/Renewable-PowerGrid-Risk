@@ -15,3 +15,11 @@ Cite as: Kantor, Diana; Casey, Nancy W.; Menne, Matthew J.; Buddenberg, Andrew. 
 Access Date: 04/11/2026
 
 Web service: https://www.ncei.noaa.gov/cdo-web/webservices/v2
+
+Weather stations selection logic:
+KDFW → North load
+KIAH → Coast humidity
+KSAT → South heat
+KAMA → Panhandle wind
+KLBB → West wind
+KABI -> Farwest wind
