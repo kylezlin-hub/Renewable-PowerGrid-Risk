@@ -121,6 +121,3 @@ grid-risk-ai/
 
 python main.py
 
-
-## Author
-Independent research project investigating AI-driven risk detection for renewable-heavy power gr
