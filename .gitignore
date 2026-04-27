@@ -1,0 +1,29 @@
+# Python cache and virtual env artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Environment and local editor settings
+.env
+.vscode/
+
+# Jupyter transient files
+.ipynb_checkpoints/
+
+# Generated figures
+figures/
+notebooks/*.png
+
+# Large / generated data outputs
+# Keep folder structure, ignore heavy files
+# Processed scenario outputs
+data/processed/*.csv
+
+# Raw weather extracts
+data/raw/weather_clean/*.csv
+
+# Raw ERCOT workbook files
+data/raw/*.xlsx
