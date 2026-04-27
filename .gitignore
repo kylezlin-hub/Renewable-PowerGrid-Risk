@@ -13,13 +13,10 @@ venv/
 # Jupyter transient files
 .ipynb_checkpoints/
 
-# Generated figures
-figures/
-notebooks/*.png
 
 # Large / generated data outputs
 # Keep folder structure, ignore heavy files
-# Processed scenario outputs
+
 data/processed/*.csv
 
 # Raw weather extracts
