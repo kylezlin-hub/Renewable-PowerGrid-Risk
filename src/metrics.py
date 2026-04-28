@@ -33,6 +33,9 @@ def compute_risk_metrics(df, fixed_threshold=None):
     max_ramp_3h = abs_ramp_3h.max()
     p95_ramp_3h = abs_ramp_3h.quantile(0.95)
 
+    # Ramp Variance
+    ramp_variance_1h = df["ramp_1h"].var(ddof=0)
+    ramp_variance_3h = df["ramp_3h"].var(ddof=0)
     return {
         "max_ramp_up": max_ramp_up,
         "max_ramp_down": max_ramp_down,
@@ -44,4 +47,14 @@ def compute_risk_metrics(df, fixed_threshold=None):
         "std_abs_ramp_1h": std_abs_ramp_1h,
         "max_ramp_3h": max_ramp_3h,
         "p95_ramp_3h": p95_ramp_3h,
+        "ramp_variance_1h": ramp_variance_1h,
+        "ramp_variance_3h": ramp_variance_3h,
     }
+
+
+# Category 1: Magnitude Metrics (max_ramp_up, max_ramp_down, max_ramp_3h)
+# What they tell us: The absolute physical limits of the system.
+# Category 2: Distribution Metrics (mean_abs_ramp_1h, std_abs_ramp_1h, p95_ramp_3h)
+# What they tell us: The "day-to-day" volatility. If these rise, the grid becomes more expensive to operate even if it doesn't fail.
+# Category 3: Tail Risk Metrics (threshold_P95, tail_probability, conditional_tail, p99_ramp_1h)
+# What they tell us: The "Black Swan" events. These are the metrics that lead to blackouts
