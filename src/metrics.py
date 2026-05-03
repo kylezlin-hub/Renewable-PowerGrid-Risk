@@ -5,11 +5,11 @@ import pandas as pd
 ## Conditional Tail Expectation (CVaR-like), 3-hour Ramp Magnitude
 
 
-def compute_risk_metrics(df, fixed_threshold=None):
+def compute_risk_metrics(df, net_load_col="NET_LOAD", fixed_threshold=None):
 
     df = df.copy()
-    df["ramp_1h"] = df["NET_LOAD"].diff()
-    df["ramp_3h"] = df["NET_LOAD"].diff(3)
+    df["ramp_1h"] = df[net_load_col].diff()
+    df["ramp_3h"] = df[net_load_col].diff(3)
     abs_ramp_1h = df["ramp_1h"].abs()
     abs_ramp_3h = df["ramp_3h"].abs()
 
