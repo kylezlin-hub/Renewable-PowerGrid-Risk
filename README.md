@@ -1,6 +1,8 @@
 # Renewable-PowerGrid-Risk
 This is an independent research project that investigates the impact of increasing renewable energy on power grid variability and explores AI-driven risk detection methods.
-Title: Uncertainty-Aware AI Risk Detection for Power Grids Under High Renewable Penetration
+Research: Uncertainty-Aware AI Risk Detection for Power Grids Under High Renewable Penetration
+Author: Kyle Lin. St Mark's School of Texas, Class of 2028
+Research start date: 03/15/2026
 
 # Data Sources
 ERCOT Historical Hourly Load:
