@@ -65,32 +65,67 @@ To study how increasing wind and solar penetration affects grid stability and ho
 5. Simulate weather uncertainty (Monte Carlo)  
 6. Model battery storage as ramp smoothing  
 
----
+## Renewable Grid Risk Framework
+Quantifying and Predicting Net Load Risk Under High Renewable Penetration Using AI-Guided Energy Storage
 
-## 🔋 Battery Storage Model
+A unified computational research framework for analyzing renewable-driven grid instability, weather-driven uncertainty, and predictive mitigation using artificial intelligence and battery energy storage systems.
 
-Battery storage is modeled as a smoothing factor:
+## Project Overview
 
-# Uncertainty-Aware Grid Risk Detection under High Renewable Penetration
+The rapid growth of renewable energy resources such as solar and wind is fundamentally transforming modern electric power systems. Although renewable generation reduces carbon emissions, its dependence on weather conditions introduces variability and uncertainty into grid operations.
 
-## Overview
-This project develops an uncertainty-aware machine learning framework to detect power grid risk under increasing renewable energy penetration. The approach integrates historical load, wind, solar, and weather data to model variability and identify extreme grid stress events.
+## This research project develops a multi-stage computational framework to:
 
-## Key Contributions
-- Net load variability modeling using ERCOT data
-- Weather-driven uncertainty using 26-year ensemble (2000–2025)
-- AI-based grid risk detection
-- Battery storage mitigation modeling
-- Extreme event backtesting (Winter Storm Uri-style scenario)
-- Predictive uncertainty as early warning signal
+quantify renewable-induced net load risk
+model weather-driven uncertainty
+predict high-risk ramp events
+mitigate instability using AI-guided battery dispatch
 
-## Methodology
-1. Construct net load = load − wind − solar
-2. Extract ramp rate and volatility features
-3. Train machine learning risk detection model
-4. Apply Monte Carlo perturbations for uncertainty
-5. Model battery storage as ramp smoothing
-6. Evaluate extreme weather stress scenarios
+The project investigates how increasing renewable penetration changes net load behavior and explores how predictive intelligence and energy storage can improve grid reliability under uncertain operating conditions.
+
+## Research Architecture
+
+The project is organized as a progressive three-stage research framework.
+
+Stage 1:
+Quantify renewable-induced net load risk
+        ↓
+Stage 2:
+Model weather-driven uncertainty
+        ↓
+Stage 3:
+Predict and mitigate instability using
+AI-guided energy storage
+Research Papers
+
+## Paper 1 — Renewable Risk Quantification (Current focus 05/12/2026)
+Title
+
+Quantifying Net Load Variability Under Increasing Renewable Penetration
+
+Objective
+
+Quantify how increasing solar and wind penetration alters net load behavior and increases ramping risk.
+
+Key Contributions
+Net load reconstruction using ERCOT data
+Renewable penetration scenario analysis
+Ramp distribution analysis
+Extreme event quantification
+Tail-risk metrics
+Nonlinear renewable risk characterization
+Core Finding
+
+Extreme net load ramp events increase nonlinearly as renewable penetration increases.
+
+## Paper 2 — Weather Uncertainty Modeling  (Planning phase...)
+Title
+
+Modeling Weather-Driven Renewable Variability and Grid Uncertainty Under High Renewable Penetration
+
+Objective
+
+Evaluate how interannual weather variability amplifies renewable-induced grid uncertainty.
 
 ## Repository Structure
 
@@ -105,19 +140,5 @@ grid-risk-ai/
 └── README.md
 
 
-## Example Results
-- Battery storage reduces extreme ramp events
-- Weather variability increases risk uncertainty
-- Uncertainty rises before stress events
 
-## Requirements
-- Python 3.10+
-- pandas
-- numpy
-- scikit-learn
-- matplotlib
-
-## How to Run
-
-python main.py
 
