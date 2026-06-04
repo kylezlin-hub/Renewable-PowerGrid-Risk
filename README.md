@@ -1,146 +1,189 @@
-# Renewable-PowerGrid-Risk
-This is an independent research project that investigates the impact of increasing renewable energy on power grid variability and explores AI-driven risk detection methods.
-Research: Uncertainty-Aware AI Risk Detection for Power Grids Under High Renewable Penetration
-Author: Kyle Lin. St Mark's School of Texas, Class of 2028
-Research start date: 03/15/2026
+# Renewable Power Grid Risk
 
-# Data Sources
-ERCOT Historical Hourly Load:
-https://www.ercot.com/gridinfo/load/load_hist
-
-ERCOT Hourly Aggregated Wind and Solar Output:
-https://www.ercot.com/mp/data-products/data-product-details?id=pg7-126-m
-
-Weather Hourly Data:
-https://www.ncei.noaa.gov/products/land-based-station/local-climatological-data
-
-Cite as: Kantor, Diana; Casey, Nancy W.; Menne, Matthew J.; Buddenberg, Andrew. 2023. Local Climatological Data (LCD), Version 2. ['KDFW','KIAH','KSAT']. NOAA National Centers for Environmental Information. https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ncdc:C01689.
-Access Date: 04/11/2026
-
-Web service: https://www.ncei.noaa.gov/cdo-web/webservices/v2
-
-Weather stations selection logic:
-KDFW → North load
-KIAH → Coast humidity
-KSAT → South heat
-KAMA → Panhandle wind
-KLBB → West wind
-KABI -> Farwest wind
-
-ERCOT Load Forecast for next 5 years:
-https://www.ercot.com/gridinfo/load/forecast
-
-
-# Load Growth
-Significant YOY growth was oberseved in ERCOT load driven by population growth, increased oil and gas activity, cryptocurrency mining, and expanding data center demand in Texas. The long-run growth trend is removed, and the trend component is re-centered to the terminal level as of 12/31/2025. Intraday variation is preserved.
-![Load Plot](figures/load_detrending_diagnostic.png)
-
-
-This project develops an uncertainty-aware machine learning framework to detect power grid risk under high renewable penetration using ERCOT data.
-
----
-
-## 🎯 Objective
-
-To study how increasing wind and solar penetration affects grid stability and how battery storage can reduce operational risk.
-
----
-
-## 📊 Key Features
-
-- ERCOT load, wind, and solar analysis  
-- NOAA weather integration  
-- Ramp rate and volatility modeling  
-- Machine learning-based risk detection  
-- Monte Carlo weather uncertainty simulation  
-- Battery storage impact modeling  
-
----
-
-
-## 🧠 Method Overview
-
-1. Construct net load = load − wind − solar  
-2. Compute ramp rate and volatility  
-3. Define risk events using extreme thresholds  
-4. Train ML model (XGBoost)  
-5. Simulate weather uncertainty (Monte Carlo)  
-6. Model battery storage as ramp smoothing  
-
-## Renewable Grid Risk Framework
-Quantifying and Predicting Net Load Risk Under High Renewable Penetration Using AI-Guided Energy Storage
-
-A unified computational research framework for analyzing renewable-driven grid instability, weather-driven uncertainty, and predictive mitigation using artificial intelligence and battery energy storage systems.
+Independent research project by Kyle Lin, St. Mark's School of Texas, Class of 2028.  
+Research start date: 2026-03-15.
 
 ## Project Overview
 
-The rapid growth of renewable energy resources such as solar and wind is fundamentally transforming modern electric power systems. Although renewable generation reduces carbon emissions, its dependence on weather conditions introduces variability and uncertainty into grid operations.
+This repository studies how increasing renewable generation changes power-grid operating risk in ERCOT. The project reconstructs hourly net load from load, wind, and solar data, measures ramping risk, and tests renewable penetration scenarios to understand when higher wind and solar output can make grid operations more variable.
 
-## This research project develops a multi-stage computational framework to:
+The central research question is:
 
-quantify renewable-induced net load risk
-model weather-driven uncertainty
-predict high-risk ramp events
-mitigate instability using AI-guided battery dispatch
+> How does high renewable penetration affect net load variability, tail ramp risk, and the need for risk-aware grid mitigation?
 
-The project investigates how increasing renewable penetration changes net load behavior and explores how predictive intelligence and energy storage can improve grid reliability under uncertain operating conditions.
+The current research focus is Paper 1: **Quantifying Net Load Variability Under Increasing Renewable Penetration**.
 
-## Research Architecture
+## Research Goals
 
-The project is organized as a progressive three-stage research framework.
+- Build a cleaned hourly ERCOT dataset from 2023-2025 load, wind, and solar data.
+- Define net load as `ERCOT.LOAD - ERCOT.WIND.GEN - ERCOT.PVGR.GEN`.
+- Quantify grid stress using ramp-rate and tail-risk metrics.
+- Analyze seasonal and intraday ramp patterns, especially around sunset hours.
+- Generate renewable penetration scenarios and sensitivity cases.
+- Use the results as a foundation for later weather-uncertainty modeling and AI-guided storage mitigation.
 
-Stage 1:
-Quantify renewable-induced net load risk
-        ↓
-Stage 2:
-Model weather-driven uncertainty
-        ↓
-Stage 3:
-Predict and mitigate instability using
-AI-guided energy storage
-Research Papers
+## Current Findings Direction
 
-## Paper 1 — Renewable Risk Quantification (Current focus 05/12/2026)
-Title
+Early analysis suggests that extreme net-load ramp events can increase nonlinearly as renewable penetration increases. The project focuses on tail risk rather than average variability because grid operators are most stressed by fast, extreme, and sustained changes in net load.
 
-Quantifying Net Load Variability Under Increasing Renewable Penetration
+## Methodology
 
-Objective
+1. **Data construction**
+   - Read ERCOT hourly wind and solar Excel files for 2023-2025.
+   - Merge load, wind generation, solar generation, installed capacity, and time features.
+   - Create renewable output, renewable share, and net load fields.
 
-Quantify how increasing solar and wind penetration alters net load behavior and increases ramping risk.
+2. **Risk quantification**
+   - Compute 1-hour and 3-hour net-load ramps.
+   - Define extreme events using a 95th percentile ramp threshold.
+   - Measure maximum ramp, tail probability, conditional tail severity, percentile ramps, and ramp variance.
 
-Key Contributions
-Net load reconstruction using ERCOT data
-Renewable penetration scenario analysis
-Ramp distribution analysis
-Extreme event quantification
-Tail-risk metrics
-Nonlinear renewable risk characterization
-Core Finding
+3. **Scenario analysis**
+   - Create 2025 multiplier scenarios for solar and wind generation.
+   - Run sensitivity analysis across solar and wind multipliers.
+   - Compare ramp variance and tail-risk metrics across renewable penetration levels.
 
-Extreme net load ramp events increase nonlinearly as renewable penetration increases.
+4. **Future extensions**
+   - Incorporate NOAA weather station data into renewable uncertainty modeling.
+   - Develop Monte Carlo weather scenarios.
+   - Explore machine-learning risk detection and storage dispatch mitigation.
 
-## Paper 2 — Weather Uncertainty Modeling  (Planning phase...)
-Title
+## Risk Metrics
 
-Modeling Weather-Driven Renewable Variability and Grid Uncertainty Under High Renewable Penetration
+The main reusable metric function is in `src/metrics.py`.
 
-Objective
-
-Evaluate how interannual weather variability amplifies renewable-induced grid uncertainty.
+| Metric | Purpose |
+| --- | --- |
+| `max_ramp_up` | Largest positive 1-hour net-load increase |
+| `max_ramp_down` | Largest negative 1-hour net-load decrease |
+| `threshold_P95` | 95th percentile absolute ramp threshold |
+| `tail_probability` | Share of observations exceeding the selected ramp threshold |
+| `conditional_tail` | Average ramp magnitude during extreme events |
+| `p99_ramp_1h` | 99th percentile 1-hour ramp magnitude |
+| `mean_abs_ramp_1h` | Average absolute 1-hour ramp |
+| `std_abs_ramp_1h` | Standard deviation of absolute 1-hour ramp |
+| `max_ramp_3h` | Largest absolute sustained 3-hour ramp |
+| `p95_ramp_3h` | 95th percentile 3-hour ramp magnitude |
+| `ramp_variance_1h` | Variance of 1-hour ramps |
+| `ramp_variance_3h` | Variance of 3-hour ramps |
 
 ## Repository Structure
 
-grid-risk-ai/
-│
-├── data/
-├── src/
-├── notebooks/
-├── figures/
-├── results/
-├── main.py
-└── README.md
+```text
+Renewable-PowerGrid-Risk/
+|-- data/
+|   |-- raw/
+|   |   |-- ERCOT_2023_Hourly_WindSolar_Output.xlsx
+|   |   |-- ERCOT_2024_Hourly_WindSolar_Output.xlsx
+|   |   |-- ERCOT_2025_Hourly_WindSolar_Output.xlsx
+|   |   `-- weather_clean/
+|   |-- processed/
+|   |   `-- hourly_load_renewable_merged.csv
+|   `-- senarios/
+|       |-- senario_generation_2025_all.csv
+|       |-- senario_generation_2025_baseline.csv
+|       |-- senario_generation_2025_senario_A.csv
+|       `-- senario_generation_2025_senario_B.csv
+|-- figures/
+|   |-- 3d_ramp_variance_1h.html
+|   |-- 3d_ramp_variance_1h.png
+|   |-- 3d_ramp_variance_3h.html
+|   `-- 3d_ramp_variance_3h.png
+|-- notebooks/
+|   |-- 01_data_exploration.ipynb
+|   |-- 02_risk_analysis.ipynb
+|   `-- 03_senario_generation.ipynb
+|-- papers/
+|-- src/
+|   |-- detrend_load.py
+|   |-- metrics.py
+|   |-- utilities.py
+|   `-- weather_data_noaa_pull.py
+|-- LICENSE
+`-- README.md
+```
 
+Note: the repository currently uses the folder name `senarios` and file names containing `senario`. These names are preserved to match the existing project files.
 
+## Notebooks
 
+| Notebook | Description |
+| --- | --- |
+| `notebooks/01_data_exploration.ipynb` | Loads raw ERCOT files, merges wind and solar sheets, creates `NET_LOAD`, and saves the processed hourly dataset. |
+| `notebooks/02_risk_analysis.ipynb` | Computes ramp-risk metrics, visualizes ramp distributions, studies monthly/hourly ramp patterns, and builds future growth scenarios. |
+| `notebooks/03_senario_generation.ipynb` | Builds 2025 baseline and renewable multiplier scenarios, then generates 3D sensitivity plots for ramp variance. |
 
+## Source Code
+
+| File | Purpose |
+| --- | --- |
+| `src/metrics.py` | Defines reusable ramp-risk metrics. |
+| `src/detrend_load.py` | Removes long-term load growth using rolling, STL, or OLS trend estimates. |
+| `src/utilities.py` | Contains plotting utilities, including 3D Plotly sensitivity plots. |
+| `src/weather_data_noaa_pull.py` | Downloads and parses NOAA hourly weather data for selected Texas stations. |
+
+## Data Sources
+
+### ERCOT
+
+- Historical hourly load: <https://www.ercot.com/gridinfo/load/load_hist>
+- Hourly aggregated wind and solar output: <https://www.ercot.com/mp/data-products/data-product-details?id=pg7-126-m>
+- Long-term load forecast: <https://www.ercot.com/gridinfo/load/forecast>
+
+### NOAA Weather
+
+- Local Climatological Data: <https://www.ncei.noaa.gov/products/land-based-station/local-climatological-data>
+- NOAA web service: <https://www.ncei.noaa.gov/cdo-web/webservices/v2>
+
+Weather station mapping used in this project:
+
+| Station | Role |
+| --- | --- |
+| `KDFW` | North Texas load and temperature proxy |
+| `KIAH` | Coast humidity and weather proxy |
+| `KSAT` | South Texas heat proxy |
+| `KAMA` | Panhandle wind proxy |
+| `KLBB` | West Texas wind proxy |
+| `KABI` | Far West wind proxy |
+
+NOAA citation:
+
+Kantor, Diana; Casey, Nancy W.; Menne, Matthew J.; Buddenberg, Andrew. 2023. Local Climatological Data (LCD), Version 2. NOAA National Centers for Environmental Information. <https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ncdc:C01689>. Accessed 2026-04-11.
+
+## Reproducing the Analysis
+
+This project is notebook-driven. A typical workflow is:
+
+1. Install Python dependencies such as `pandas`, `numpy`, `matplotlib`, `plotly`, `kaleido`, `openpyxl`, `requests`, `python-dotenv`, and optionally `statsmodels`.
+2. Run `notebooks/01_data_exploration.ipynb` to create `data/processed/hourly_load_renewable_merged.csv`.
+3. Run `notebooks/02_risk_analysis.ipynb` to compute and visualize ramp-risk metrics.
+4. Run `notebooks/03_senario_generation.ipynb` to generate renewable multiplier scenarios and 3D sensitivity plots.
+
+Optional load detrending:
+
+```powershell
+python src\detrend_load.py
+```
+
+Optional NOAA weather pull:
+
+```powershell
+python src\weather_data_noaa_pull.py
+```
+
+The NOAA script expects a `NOAA_TOKEN` environment variable if the API workflow is used.
+
+## Research Roadmap
+
+- **Paper 1: Renewable Risk Quantification**  
+  Quantify how increasing solar and wind penetration changes net-load ramp behavior and extreme-event frequency.
+
+- **Paper 2: Weather Uncertainty Modeling**  
+  Model how interannual weather variability affects renewable generation and grid risk.
+
+- **Paper 3: AI-Guided Mitigation**  
+  Explore predictive risk detection and battery-storage dispatch strategies for reducing ramp stress.
+
+## License
+
+This project is released under the MIT License. See `LICENSE` for details.
