@@ -22,9 +22,48 @@ The current research focus is Paper 1: **Quantifying Net Load Variability Under 
 - Generate renewable penetration scenarios and sensitivity cases.
 - Use the results as a foundation for later weather-uncertainty modeling and AI-guided storage mitigation.
 
-## Current Findings Direction
+## Key Results (Current)
 
-Early analysis suggests that extreme net-load ramp events can increase nonlinearly as renewable penetration increases. The project focuses on tail risk rather than average variability because grid operators are most stressed by fast, extreme, and sustained changes in net load.
+The enhanced 2025 scenario analysis (baseline vs. 2.5x solar) shows a clear nonlinear increase in ramping stress:
+
+- Max sunset ramp (17:00-20:00) increases from about 19,421 MW to 57,545 MW (about 3.0x).
+- Tail probability rises from about 5.0% to about 20.7%.
+- P99 1-hour ramp increases from about 10,003 MW to about 27,037 MW.
+- Hours exceeding estimated dispatchable ramp capacity increase from 0 to 240 hours/year.
+
+Interpretation: solar scaling is the first-order driver of tail ramp risk in this ERCOT setup, especially in the sunset transition window.
+
+## Results Plots
+
+### 1) Nonlinear Sunset Ramping vs Solar Penetration
+
+This plot shows that sunset ramp requirements accelerate as daytime solar penetration rises.
+
+![Solar Penetration vs Sunset Ramp](figures/sunset_ramp_vs_solar_penetration.png)
+
+### 2) Sunset Risk Escalation by Scenario
+
+Across baseline, 1.5x, 2.0x, and 2.5x solar scenarios, both ramp magnitudes and high-risk day counts increase sharply.
+
+![Sunset Risk by Scenario](figures/sunset_risk_by_scenario.png)
+
+### 3) Operational Feasibility (Ramping Duration Curve)
+
+This compares required ramp rates against estimated dispatchable ramp capacity. Under high solar scenarios, the curve crosses the capacity line for many hours.
+
+![Ramping Duration Curve](figures/ramping_duration_curve.png)
+
+### 4) Weather Robustness Check (2023 Heat-Year Perturbation)
+
+Weather-adjusted load moves risk metrics modestly relative to solar scaling. The core nonlinear conclusion remains stable.
+
+![Weather Robustness Compact](figures/weather_robustness_compact_2023.png)
+
+### 5) Weather-Effect Strength Dominance Sweep
+
+Even when weather-load effect strength is amplified (up to 3.0x), the weather contribution remains much smaller than the baseline-to-high-solar jump.
+
+![Weather Strength Dominance Sweep](figures/weather_strength_sweep_dominance.png)
 
 ## Methodology
 
@@ -92,7 +131,8 @@ Renewable-PowerGrid-Risk/
 |-- notebooks/
 |   |-- 01_data_exploration.ipynb
 |   |-- 02_risk_analysis.ipynb
-|   `-- 03_senario_generation.ipynb
+|   |-- 03_senario_generation.ipynb
+|   `-- 04_enhanced_ramping_analysis.ipynb
 |-- papers/
 |-- src/
 |   |-- detrend_load.py
@@ -112,6 +152,7 @@ Note: the repository currently uses the folder name `senarios` and file names co
 | `notebooks/01_data_exploration.ipynb` | Loads raw ERCOT files, merges wind and solar sheets, creates `NET_LOAD`, and saves the processed hourly dataset. |
 | `notebooks/02_risk_analysis.ipynb` | Computes ramp-risk metrics, visualizes ramp distributions, studies monthly/hourly ramp patterns, and builds future growth scenarios. |
 | `notebooks/03_senario_generation.ipynb` | Builds 2025 baseline and renewable multiplier scenarios, then generates 3D sensitivity plots for ramp variance. |
+| `notebooks/04_enhanced_ramping_analysis.ipynb` | Performs sunset-window stress analysis, clustering, dispatchable capacity feasibility checks, and weather robustness/dominance sweeps. |
 
 ## Source Code
 
@@ -158,6 +199,18 @@ This project is notebook-driven. A typical workflow is:
 2. Run `notebooks/01_data_exploration.ipynb` to create `data/processed/hourly_load_renewable_merged.csv`.
 3. Run `notebooks/02_risk_analysis.ipynb` to compute and visualize ramp-risk metrics.
 4. Run `notebooks/03_senario_generation.ipynb` to generate renewable multiplier scenarios and 3D sensitivity plots.
+5. Run `notebooks/04_enhanced_ramping_analysis.ipynb` for enhanced sunset risk, capacity-feasibility analysis, and weather robustness checks.
+
+Key generated outputs from notebook 04 include:
+
+- `figures/sunset_ramp_vs_solar_penetration.png`
+- `figures/sunset_risk_by_scenario.png`
+- `figures/ramping_duration_curve.png`
+- `figures/weather_robustness_compact_2023.png`
+- `figures/weather_strength_sweep_dominance.png`
+- `data/processed/ramping_risk_summary_dashboard.csv`
+- `data/processed/weather_robustness_2023_compact.csv`
+- `data/processed/weather_strength_sweep_dominance.csv`
 
 Optional load detrending:
 
