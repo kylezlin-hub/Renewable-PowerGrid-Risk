@@ -47,19 +47,25 @@ Across baseline, 1.5x, 2.0x, and 2.5x solar scenarios, both ramp magnitudes and 
 
 ![Sunset Risk by Scenario](figures/sunset_risk_by_scenario.png)
 
-### 3) Operational Feasibility (Ramping Duration Curve)
+### 3) 3D Sensitivity: Solar/Wind Multipliers vs 1-Hour Ramp Variance
+
+This surface shows the nonlinear relationship between renewable multipliers and 1-hour ramp variance. Risk rises faster in the high-solar region, highlighting accelerating variability under stronger solar scaling.
+
+![3D Ramp Variance 1h](figures/3d_ramp_variance_1h.png)
+
+### 4) Operational Feasibility (Ramping Duration Curve)
 
 This compares required ramp rates against estimated dispatchable ramp capacity. Under high solar scenarios, the curve crosses the capacity line for many hours.
 
 ![Ramping Duration Curve](figures/ramping_duration_curve.png)
 
-### 4) Weather Robustness Check (2023 Heat-Year Perturbation)
+### 5) Weather Robustness Check (2023 Heat-Year Perturbation)
 
 Weather-adjusted load moves risk metrics modestly relative to solar scaling. The core nonlinear conclusion remains stable.
 
 ![Weather Robustness Compact](figures/weather_robustness_compact_2023.png)
 
-### 5) Weather-Effect Strength Dominance Sweep
+### 6) Weather-Effect Strength Dominance Sweep
 
 Even when weather-load effect strength is amplified (up to 3.0x), the weather contribution remains much smaller than the baseline-to-high-solar jump.
 
@@ -205,6 +211,7 @@ Key generated outputs from notebook 04 include:
 
 - `figures/sunset_ramp_vs_solar_penetration.png`
 - `figures/sunset_risk_by_scenario.png`
+- `figures/3d_ramp_variance_1h.png`
 - `figures/ramping_duration_curve.png`
 - `figures/weather_robustness_compact_2023.png`
 - `figures/weather_strength_sweep_dominance.png`
