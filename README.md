@@ -3,6 +3,14 @@
 Independent research project by Kyle Lin, St. Mark's School of Texas, Class of 2028.  
 Research start date: 2026-03-15.
 
+## Motivation
+
+In February 2021, Winter Storm Uri caused widespread power outages across Texas, leaving millions of people without electricity during a period of extreme cold. Experiencing this event firsthand sparked my interest in understanding how power systems operate and why large-scale grid failures can occur.
+
+The outages raised questions that have stayed with me ever since: What makes a power grid vulnerable to extreme weather? Why can a system that works reliably under normal conditions fail so dramatically during rare events? As renewable energy sources such as wind and solar become a larger part of the electricity mix, how can grid operators maintain reliability while adapting to a changing energy landscape?
+
+This project was motivated by a desire to better understand these challenges. By analyzing historical power system data and studying the impact of increasing renewable penetration on net load variability and ramping behavior, I hope to gain insight into the factors that influence grid reliability,  and explore ways to build a more resilient and dependable electric power system in the future.
+
 ## Project Overview
 
 This repository studies how increasing renewable generation changes power-grid operating risk in ERCOT. The project reconstructs hourly net load from load, wind, and solar data, measures ramping risk, and tests renewable penetration scenarios to understand when higher wind and solar output can make grid operations more variable.
