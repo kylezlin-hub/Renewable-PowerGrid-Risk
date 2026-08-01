@@ -32,8 +32,8 @@ export default function App() {
       <header className="topbar">
         <span className="brand">⚡ ERCOT Grid Risk Simulator</span>
         <nav>
-          <a href="#explainer">Explainer</a>
           <a href="#explorer">Explorer</a>
+          <a href="#explainer">Explainer</a>
           <a href="#live">Live grid</a>
           <a href="#findings">Findings</a>
           <a href="#about">Method</a>
@@ -61,8 +61,8 @@ export default function App() {
 
       {data && (
         <>
-          <ExplainerGrid data={data} />
           <ScenarioExplorer data={data} />
+          <ExplainerGrid data={data} />
         </>
       )}
 

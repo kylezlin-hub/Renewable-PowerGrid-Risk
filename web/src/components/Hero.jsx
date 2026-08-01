@@ -10,11 +10,10 @@ export default function Hero() {
         the risk respond, using real ERCOT data behind the same math from the research paper.
       </p>
       <p style={{ marginTop: 16 }}>
-        Start with the <a className="inline" href="#explainer">explainer</a> to see how a grid
-        balances supply and demand, then open the{' '}
-        <a className="inline" href="#explorer">scenario explorer</a> to test high-renewable
-        futures yourself. A <a className="inline" href="#live">live panel</a> shows the ERCOT grid
-        right now.
+        Jump into the <a className="inline" href="#explorer">scenario explorer</a> to test
+        high-renewable futures yourself — or, if you want the background first, read the{' '}
+        <a className="inline" href="#explainer">explainer</a> on how a grid balances supply and
+        demand. A <a className="inline" href="#live">live panel</a> shows the ERCOT grid right now.
       </p>
     </section>
   )
