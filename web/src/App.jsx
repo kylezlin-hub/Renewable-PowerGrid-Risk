@@ -37,6 +37,9 @@ export default function App() {
           <a href="#live">Live grid</a>
           <a href="#findings">Findings</a>
           <a href="#about">Method</a>
+          <a className="btn-link" href="https://kylezlin-hub.github.io/" target="_blank" rel="noreferrer">
+            My Personal Page ↗
+          </a>
           <button className="theme-toggle" onClick={cycleTheme} title="Toggle color theme">
             {theme === 'auto' ? 'Theme: Auto' : theme === 'light' ? 'Theme: Light' : 'Theme: Dark'}
           </button>
