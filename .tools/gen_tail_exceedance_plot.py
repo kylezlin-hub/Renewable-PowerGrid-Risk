@@ -11,11 +11,18 @@ FIGURES_DIR = ROOT / 'figures'
 
 df = pd.read_csv(PROCESSED_DIR / 'hourly_load_renewable_merged.csv', parse_dates=['datetime'])
 df = df[df['datetime'].dt.year == 2025].copy()
+df['hour'] = df['datetime'].dt.hour
 
-# Compute actual baseline P95 from 2025 data
-baseline_ramp = (df['ERCOT.LOAD'] - df['ERCOT.WIND.GEN'] - df['ERCOT.PVGR.GEN']).diff().abs().dropna()
+# Restrict to sunset hours (17, 18, 19, 20)
+sunset_hours = [17, 18, 19, 20]
+df_sunset = df[df['hour'].isin(sunset_hours)].copy()
+
+# Compute baseline P95 from 2025 sunset-hour upward ramps
+baseline_net = df_sunset['ERCOT.LOAD'] - df_sunset['ERCOT.WIND.GEN'] - df_sunset['ERCOT.PVGR.GEN']
+baseline_ramp = baseline_net.diff().dropna()
+baseline_ramp = baseline_ramp[baseline_ramp > 0]
 FIXED_THRESHOLD = baseline_ramp.quantile(0.95)
-print(f'Computed 2025 baseline P95 threshold: {FIXED_THRESHOLD:.0f} MW')
+print(f'Computed 2025 baseline P95 (sunset upward ramps): {FIXED_THRESHOLD:.0f} MW')
 
 solar_multipliers = [1.0, 1.5, 2.0, 2.5]
 labels = ['Baseline (1.0×)', '1.5× Solar', '2.0× Solar', '2.5× Solar']
@@ -26,8 +33,9 @@ fig, ax = plt.subplots(figsize=(10, 7))
 tail_probs = []
 
 for mult, label, color in zip(solar_multipliers, labels, colors):
-    net_load = df['ERCOT.LOAD'] - df['ERCOT.WIND.GEN'] - mult * df['ERCOT.PVGR.GEN']
-    ramp_1h = net_load.diff().abs().dropna()
+    net_load = df_sunset['ERCOT.LOAD'] - df_sunset['ERCOT.WIND.GEN'] - mult * df_sunset['ERCOT.PVGR.GEN']
+    ramp_1h = net_load.diff().dropna()
+    ramp_1h = ramp_1h[ramp_1h > 0]
 
     sorted_ramps = np.sort(ramp_1h.values)[::-1]
     exceedance = np.arange(1, len(sorted_ramps) + 1) / len(sorted_ramps)
@@ -43,19 +51,18 @@ ax.text(FIXED_THRESHOLD + 200, 0.35, f'Fixed threshold\n({FIXED_THRESHOLD:.0f} M
 
 for i, (prob, color, label) in enumerate(zip(tail_probs, colors, labels)):
     ax.plot(FIXED_THRESHOLD, prob, 'o', color=color, markersize=9, zorder=5)
-    offset_x = 400
     offset_y = 0.008 if i < 2 else -0.008
     ax.annotate(f'{prob*100:.1f}%', xy=(FIXED_THRESHOLD, prob),
                 xytext=(FIXED_THRESHOLD - 2500, prob + offset_y),
                 fontsize=9.5, fontweight='bold', color=color,
                 arrowprops=dict(arrowstyle='->', color=color, lw=1.2))
 
-ax.set_xlabel('Absolute 1-Hour Net-Load Ramp (MW)', fontsize=12, fontweight='bold')
+ax.set_xlabel('Upward Net-Load Ramp (MW)', fontsize=12, fontweight='bold')
 ax.set_ylabel('Exceedance Probability', fontsize=12, fontweight='bold')
-ax.set_title('Tail-Risk Escalation: Ramp Exceedance Curves Across Solar Scenarios',
+ax.set_title('Tail-Risk Escalation: Sunset-Hour (17:00–20:00) Ramp Exceedance',
              fontsize=13, fontweight='bold')
 ax.set_xlim(0, 40000)
-ax.set_ylim(0, 0.42)
+ax.set_ylim(0, 0.50)
 ax.legend(fontsize=11, loc='upper right')
 ax.grid(alpha=0.3)
 
