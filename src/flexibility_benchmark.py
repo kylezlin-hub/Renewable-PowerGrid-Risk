@@ -15,6 +15,16 @@ Sources:
 - ERCOT fleet capacity: ERCOT CDR Report 2025-2034 (Dec 2024)
 - Battery storage: EIA Battery Storage Market Trends (July 2024)
 """
+"""
+The component logic:
+
+Resource	Nameplate	Constraint	Effective ramp
+Combined-cycle	25 GW	50% online × 50% headroom	6,250 MW/hr
+Gas peakers	15 GW	67% dispatchable within 1 hr	10,000 MW/hr
+Battery	5 GW	Full dispatch, instantaneous	5,000 MW/hr
+Other (hydro+DR)	2 GW	Conservative estimate	2,000 MW/hr
+Total			23,250 MW/hr
+"""
 
 # =============================================================
 # ERCOT Fleet Installed Capacity (MW) — from ERCOT CDR 2025

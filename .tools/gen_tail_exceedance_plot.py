@@ -13,8 +13,8 @@ df = pd.read_csv(PROCESSED_DIR / 'hourly_load_renewable_merged.csv', parse_dates
 df = df[df['datetime'].dt.year == 2025].copy()
 df['hour'] = df['datetime'].dt.hour
 
-# Restrict to sunset hours (17, 18, 19, 20)
-sunset_hours = [17, 18, 19, 20]
+# Restrict to sunset hours (18, 19, 20, 21)
+sunset_hours = [18, 19, 20, 21]
 df_sunset = df[df['hour'].isin(sunset_hours)].copy()
 
 # Compute baseline P95 from 2025 sunset-hour upward ramps
@@ -59,7 +59,7 @@ for i, (prob, color, label) in enumerate(zip(tail_probs, colors, labels)):
 
 ax.set_xlabel('Upward Net-Load Ramp (MW)', fontsize=12, fontweight='bold')
 ax.set_ylabel('Exceedance Probability', fontsize=12, fontweight='bold')
-ax.set_title('Tail-Risk Escalation: Sunset-Hour (17:00–20:00) Ramp Exceedance',
+ax.set_title('Tail-Risk Escalation: Sunset-Hour (18:00–21:00) Ramp Exceedance',
              fontsize=13, fontweight='bold')
 ax.set_xlim(0, 40000)
 ax.set_ylim(0, 0.50)

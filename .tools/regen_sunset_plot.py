@@ -11,7 +11,7 @@ FIGURES_DIR = ROOT / 'figures'
 
 df = pd.read_csv(PROCESSED_DIR / 'hourly_load_renewable_merged.csv', parse_dates=['datetime'])
 
-sunset_hours = [17, 18, 19, 20]
+sunset_hours = [18, 19, 20, 21]
 summer_months = [5, 6, 7, 8, 9]
 
 df_sunset = df[
@@ -24,13 +24,13 @@ for date, day_df in df_sunset.groupby(df_sunset['datetime'].dt.date):
     day_df = day_df.sort_values('hour')
     if len(day_df) != 4 or not all(h in day_df['hour'].values for h in sunset_hours):
         continue
-    nl_17 = day_df[day_df['hour']==17]['NET_LOAD'].values[0]
-    nl_20 = day_df[day_df['hour']==20]['NET_LOAD'].values[0]
+    nl_18 = day_df[day_df['hour']==18]['NET_LOAD'].values[0]
+    nl_21 = day_df[day_df['hour']==21]['NET_LOAD'].values[0]
     wind_avg = day_df['ERCOT.WIND.GEN'].mean()
     load_avg = day_df['ERCOT.LOAD'].mean()
     daily_sunset.append({
         'date': date,
-        'sunset_ramp_3h': nl_20 - nl_17,
+        'sunset_ramp_3h': nl_21 - nl_18,
         'wind_avg_MW': wind_avg,
         'peak_solar_penetration': day_df['ERCOT.PVGR.GEN'].max() / load_avg,
     })
@@ -57,7 +57,7 @@ ax.plot(x_trend * 100, p(x_trend), 'r--', linewidth=2.5, label='2nd-order polyno
 
 ax.set_xlim(0, 55)
 ax.set_xlabel('Peak Solar Penetration (% of Load)', fontsize=13, fontweight='bold')
-ax.set_ylabel('Sunset Ramp 17h to 20h (MW)', fontsize=13, fontweight='bold')
+ax.set_ylabel('Sunset Ramp 18h to 21h (MW)', fontsize=13, fontweight='bold')
 ax.set_title('Nonlinear Relationship: Solar Penetration vs Sunset Ramping Requirement',
              fontsize=14, fontweight='bold')
 ax.grid(alpha=0.3)

@@ -28,9 +28,10 @@ hourly_mean = up.groupby('hour')['ramp_1h'].mean()
 print('=== Mean upward 1h ramp by hour (top 6) ===')
 print(hourly_mean.nlargest(6).round(0))
 
-# Peak sunset hours
-sunset_mean = up[up['hour'].isin([17,18,19,20])]['ramp_1h'].mean()
-non_sunset_mean = up[~up['hour'].isin([17,18,19,20])]['ramp_1h'].mean()
+SUNSET_HOURS = [17, 18, 19, 20]
+
+sunset_mean = up[up['hour'].isin(SUNSET_HOURS)]['ramp_1h'].mean()
+non_sunset_mean = up[~up['hour'].isin(SUNSET_HOURS)]['ramp_1h'].mean()
 print(f'\nMean upward ramp, sunset (17-20): {sunset_mean:.0f} MW')
 print(f'Mean upward ramp, non-sunset: {non_sunset_mean:.0f} MW')
 print(f'Ratio: {sunset_mean/non_sunset_mean:.1f}x')
@@ -41,27 +42,29 @@ print('\n=== Mean upward ramp by season ===')
 print(season_mean.round(0))
 
 # Sunset-hour mean by season
-sunset_season = up[up['hour'].isin([17,18,19,20])].groupby('season')['ramp_1h'].mean()
+sunset_season = up[up['hour'].isin(SUNSET_HOURS)].groupby('season')['ramp_1h'].mean()
 print('\n=== Mean upward ramp in sunset window by season ===')
 print(sunset_season.round(0))
 
 # What fraction of extreme ramps (>P95) occur in sunset window?
 threshold = up['ramp_1h'].quantile(0.95)
 extreme = up[up['ramp_1h'] > threshold]
-frac_sunset = extreme['hour'].isin([17,18,19,20]).mean()
+frac_sunset = extreme['hour'].isin(SUNSET_HOURS).mean()
 print(f'\nAll-hours upward P95 threshold: {threshold:.0f} MW')
 print(f'Fraction of P95 exceedances in sunset window (17-20): {frac_sunset*100:.1f}%')
 
 # Winter vs other seasons for sunset ramps
-winter_sunset = up[(up['hour'].isin([17,18,19,20])) & (up['season']=='Winter')]['ramp_1h']
-summer_sunset = up[(up['hour'].isin([17,18,19,20])) & (up['season']=='Summer')]['ramp_1h']
-fall_sunset = up[(up['hour'].isin([17,18,19,20])) & (up['season']=='Fall')]['ramp_1h']
-spring_sunset = up[(up['hour'].isin([17,18,19,20])) & (up['season']=='Spring')]['ramp_1h']
+winter_sunset = up[(up['hour'].isin(SUNSET_HOURS)) & (up['season']=='Winter')]['ramp_1h']
+summer_sunset = up[(up['hour'].isin(SUNSET_HOURS)) & (up['season']=='Summer')]['ramp_1h']
+fall_sunset = up[(up['hour'].isin(SUNSET_HOURS)) & (up['season']=='Fall')]['ramp_1h']
+spring_sunset = up[(up['hour'].isin(SUNSET_HOURS)) & (up['season']=='Spring')]['ramp_1h']
 print(f'\nMean sunset upward ramp by season:')
 print(f'  Winter: {winter_sunset.mean():.0f} MW (max: {winter_sunset.max():.0f} MW)')
 print(f'  Spring: {spring_sunset.mean():.0f} MW (max: {spring_sunset.max():.0f} MW)')
 print(f'  Summer: {summer_sunset.mean():.0f} MW (max: {summer_sunset.max():.0f} MW)')
 print(f'  Fall:   {fall_sunset.mean():.0f} MW (max: {fall_sunset.max():.0f} MW)')
+pct_diff = (winter_sunset.mean() - summer_sunset.mean()) / summer_sunset.mean() * 100
+print(f'  Winter vs Summer difference: {pct_diff:.0f}%')
 
 # Peak hour
 peak_hour = hourly_mean.idxmax()
