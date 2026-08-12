@@ -115,6 +115,11 @@ for d_idx in range(MAX_DUR):
             txt_color = 'white' if d_idx >= 2 else INK
             axA.text(x[i], b + v / 2, f'{v:.0f}', ha='center', va='center',
                      fontsize=10, fontweight='bold', color=txt_color, zorder=4)
+        elif v > 0:
+            # Keep tiny nonzero shares visible so rare 3h/4+h episodes are not mistaken for zero.
+            label_y = min(b + v + 1.0, 99.2)
+            axA.text(x[i], label_y, f'{v:.1f}', ha='center', va='bottom',
+                     fontsize=8.5, fontweight='bold', color=SEQ_BLUE[d_idx], zorder=5)
     bottoms += vals
 
 axA.set_ylabel('Share of extreme-ramp events (%)', fontsize=11)
@@ -153,8 +158,9 @@ for i, v in enumerate(max_dur):
                  ha='center', fontsize=10, fontweight='bold', color=CAT_ORANGE, zorder=5)
 
 # annotate event counts at the base so the sample size is visible
+# n here means number of extreme-ramp event episodes, not number of extreme hours
 for i, n in enumerate(n_events):
-    axB.text(x[i], 0.12, f'n={n}', ha='center', va='bottom', fontsize=8.5,
+    axB.text(x[i], 0.12, f'{n} events', ha='center', va='bottom', fontsize=8.5,
              color='white', fontweight='bold', zorder=6)
 
 axB.set_ylabel('Duration (consecutive hours)', fontsize=11)
@@ -174,6 +180,8 @@ axB.legend(loc='upper left', frameon=False, fontsize=9.5)
 
 fig.text(0.5, -0.02,
          'Extreme hour: |1-h net-load ramp| > 6,033 MW (2025 baseline P95).  '
+         'Panel (a) shows the share of event episodes in each duration bin (1 h, 2 h, 3 h, 4+ h).  '
+         'Panel (b) reports mean duration and maximum consecutive duration; labels at the base are event counts.  '
          'Events are maximal runs of consecutive extreme hours; ERCOT 2025, solar-scaled.',
          ha='center', fontsize=8.5, color=MUTED)
 
