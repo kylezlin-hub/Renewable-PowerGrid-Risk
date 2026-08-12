@@ -14,7 +14,7 @@ df = df[df['datetime'].dt.year == 2025].copy()
 df['hour'] = df['datetime'].dt.hour
 
 # Restrict to sunset hours (18, 19, 20, 21)
-sunset_hours = [18, 19, 20, 21]
+sunset_hours = [17,18, 19, 20]
 df_sunset = df[df['hour'].isin(sunset_hours)].copy()
 
 # Compute baseline P95 from 2025 sunset-hour upward ramps
@@ -24,6 +24,10 @@ baseline_ramp = baseline_ramp[baseline_ramp > 0]
 FIXED_THRESHOLD = baseline_ramp.quantile(0.95)
 print(f'Computed 2025 baseline P95 (sunset upward ramps): {FIXED_THRESHOLD:.0f} MW')
 
+# Fixed threshold for mean threshold exceedance metric:
+# MTE = E[R - T | R > T], with T = 10,524 MW
+MTE_THRESHOLD = 10524.0
+
 solar_multipliers = [1.0, 1.5, 2.0, 2.5]
 labels = ['Baseline (1.0×)', '1.5× Solar', '2.0× Solar', '2.5× Solar']
 colors = ['#2563eb', '#f59e0b', '#dc2626', '#7c2d12']
@@ -31,16 +35,28 @@ colors = ['#2563eb', '#f59e0b', '#dc2626', '#7c2d12']
 fig, ax = plt.subplots(figsize=(10, 7))
 
 tail_probs = []
+mte_values = []
+mte_anchors = []
 
 for mult, label, color in zip(solar_multipliers, labels, colors):
     net_load = df_sunset['ERCOT.LOAD'] - df_sunset['ERCOT.WIND.GEN'] - mult * df_sunset['ERCOT.PVGR.GEN']
     ramp_1h = net_load.diff().dropna()
     ramp_1h = ramp_1h[ramp_1h > 0]
 
+    exceedances_mte = ramp_1h[ramp_1h > MTE_THRESHOLD]
+    if len(exceedances_mte) == 0:
+        mte = np.nan
+    else:
+        mte = (exceedances_mte - MTE_THRESHOLD).mean()
+    mte_values.append(mte)
+
     sorted_ramps = np.sort(ramp_1h.values)[::-1]
     exceedance = np.arange(1, len(sorted_ramps) + 1) / len(sorted_ramps)
 
     ax.plot(sorted_ramps, exceedance, color=color, linewidth=2.2, label=label)
+
+    anchor_idx = min(len(sorted_ramps) - 1, max(0, int(0.25 * len(sorted_ramps))))
+    mte_anchors.append((sorted_ramps[anchor_idx], exceedance[anchor_idx], color, mte))
 
     tail_prob = (ramp_1h > FIXED_THRESHOLD).mean()
     tail_probs.append(tail_prob)
@@ -57,10 +73,35 @@ for i, (prob, color, label) in enumerate(zip(tail_probs, colors, labels)):
                 fontsize=9.5, fontweight='bold', color=color,
                 arrowprops=dict(arrowstyle='->', color=color, lw=1.2))
 
+for i, (x_anchor, y_anchor, color, mte) in enumerate(mte_anchors):
+    y_offsets = [0.020, 0.010, -0.006, -0.016]
+    y_shift = y_offsets[i] if i < len(y_offsets) else 0.0
+    mte_text = 'MTE N/A' if np.isnan(mte) else f'MTE {mte:.0f} MW'
+    ax.annotate(
+        mte_text,
+        xy=(x_anchor, y_anchor),
+        xytext=(x_anchor + 1100, y_anchor + y_shift),
+        fontsize=9,
+        fontweight='bold',
+        color=color,
+        bbox=dict(boxstyle='round,pad=0.20', fc='white', ec=color, alpha=0.85),
+        arrowprops=dict(arrowstyle='-', color=color, lw=1.0),
+    )
+
 ax.set_xlabel('Upward Net-Load Ramp (MW)', fontsize=12, fontweight='bold')
 ax.set_ylabel('Exceedance Probability', fontsize=12, fontweight='bold')
-ax.set_title('Tail-Risk Escalation: Sunset-Hour (18:00–21:00) Ramp Exceedance',
+ax.set_title('Tail-Risk Escalation: Sunset-Hour (17:00–21:00) Ramp Exceedance',
              fontsize=13, fontweight='bold')
+ax.text(
+    0.02,
+    0.02,
+    'Baseline sunset P95 threshold = 10,524 MW',
+    transform=ax.transAxes,
+    fontsize=10,
+    color='dimgray',
+    ha='left',
+    va='bottom'
+)
 ax.set_xlim(0, 40000)
 ax.set_ylim(0, 0.50)
 ax.legend(fontsize=11, loc='upper right')
@@ -70,3 +111,10 @@ plt.tight_layout()
 plt.savefig(FIGURES_DIR / 'tail_exceedance_by_scenario.png', dpi=300, bbox_inches='tight')
 print('Saved: figures/tail_exceedance_by_scenario.png')
 print(f'Tail probabilities at {FIXED_THRESHOLD:.0f} MW: {[f"{p*100:.1f}%" for p in tail_probs]}')
+
+print(f'Mean threshold exceedance at {MTE_THRESHOLD:.0f} MW (MTE = E[R-T | R>T]):')
+for label, mte in zip(labels, mte_values):
+    if np.isnan(mte):
+        print(f'  {label}: NaN (no exceedances above threshold)')
+    else:
+        print(f'  {label}: {mte:.1f} MW')
