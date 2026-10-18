@@ -89,7 +89,7 @@ for i, m in enumerate(MULTS):
 # ----------------------------------------------------------------------------
 plt.rcParams.update({
     'font.family': 'sans-serif',
-    'font.sans-serif': ['Segoe UI', 'DejaVu Sans', 'Arial'],
+    'font.sans-serif': ['Segoe UI', 'DejaVu Sans', 'Arial'], 
     'figure.facecolor': SURFACE,
     'axes.facecolor': SURFACE,
     'axes.edgecolor': AXIS,
